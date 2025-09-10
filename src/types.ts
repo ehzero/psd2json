@@ -68,8 +68,25 @@ export interface EffectInfo {
     size: number | undefined;
     spread: number | undefined;
   };
+  innerGlow?: {
+    color: string | undefined;
+    size: number | undefined;
+    spread: number | undefined;
+  };
   stroke?: {
     color: string | undefined;
     width: number | undefined;
+    position: 'inside' | 'center' | 'outside' | undefined;
+  };
+  gradientOverlay?: {
+    background: string | undefined;
+    clipPath?: boolean; // For text gradient effects
+  };
+  patternOverlay?: {
+    background: string | undefined;
+    clipPath?: boolean;
+  };
+  bevel?: {
+    boxShadow: string | undefined;
   };
 }
