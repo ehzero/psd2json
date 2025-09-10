@@ -1,0 +1,62 @@
+{
+  "name": "psd2json",
+  "version": "1.0.0",
+  "description": "A TypeScript library to convert PSD files to JSON format with React CSSProperties styling",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix"
+  },
+  "keywords": [
+    "psd",
+    "photoshop",
+    "json",
+    "typescript",
+    "react",
+    "css",
+    "ag-psd",
+    "layer",
+    "conversion"
+  ],
+  "author": "YTY",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yty/psd2json.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yty/psd2json/issues"
+  },
+  "homepage": "https://github.com/yty/psd2json#readme",
+  "dependencies": {
+    "ag-psd": "^28.2.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.5",
+    "@types/node": "^20.6.0",
+    "@types/react": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.49.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "react": ">=16.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
