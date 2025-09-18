@@ -1,354 +1,147 @@
 # psd2json
 
-A powerful TypeScript library that converts Adobe Photoshop PSD files to structured JSON format with React CSSProperties styling.
+TypeScript library that converts Adobe Photoshop PSD files to JSON with React CSSProperties.
 
-![npm version](https://img.shields.io/npm/v/psd2json.svg)
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
-![TypeScript](https://img.shields.io/badge/TypeScript-Ready-brightgreen.svg)
-
-## ✨ Features
-
-- 🎨 **Convert PSD to JSON**: Transform Photoshop documents into structured data
-- ⚛️ **React Ready**: Output styles as React.CSSProperties for seamless integration
-- 🎯 **Layer Separation**: Automatically separates text and image layers
-- 📏 **Pixel Units**: Consistent pixel-based positioning and sizing
-- 🔍 **Comprehensive Parsing**: Extracts fonts, colors, positioning, effects, and more
-- 🛡️ **TypeScript First**: Full TypeScript support with strict type checking
-- 🚀 **Optimized Performance**: Built on the reliable ag-psd library
-- 🔧 **Flexible Options**: Configurable parsing with hidden layer control
-
-## 📦 Installation
+## Installation
 
 ```bash
 npm install @ehzero/psd2json
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ```typescript
 import { psd2json } from '@ehzero/psd2json';
-import { readFileSync } from 'fs';
 
-// Load your PSD file
-const psdBuffer = readFileSync('design.psd');
-const buffer = psdBuffer.buffer.slice(
-  psdBuffer.byteOffset,
-  psdBuffer.byteOffset + psdBuffer.byteLength
-);
+const result = await psd2json(psdBuffer);
 
-// Convert to JSON
-const result = await psd2json(buffer);
-
-console.log('Text layers:', result.texts.length);
-console.log('Image layers:', result.images.length);
+console.log('Text layers:', result.texts);
+console.log('Image layers:', result.images);
 ```
 
-## 📖 API Reference
+## API
 
 ### `psd2json(buffer, options?)`
 
-Converts a PSD file buffer to structured JSON format.
-
-**Parameters:**
-
-- `buffer: ArrayBuffer` - The PSD file as an ArrayBuffer
-- `options?: ConversionOptions` - Optional configuration
-
-**Returns:** `Promise<ConversionResult>`
-
-### ConversionOptions
-
 ```typescript
 interface ConversionOptions {
-  logging?: boolean;        // Enable conversion progress logs (default: false)
+  logging?: boolean;        // Enable logs (default: false)
   includeHidden?: boolean;  // Include hidden layers (default: false)
 }
-```
 
-### ConversionResult
-
-```typescript
 interface ConversionResult {
-  texts: TextLayer[];   // Array of text layers
-  images: ImageLayer[]; // Array of image layers
+  texts: TextLayer[];       // Text layers with CSS properties
+  images: ImageLayer[];     // Image layers with CSS properties
 }
 ```
 
-### Layer Types
-
-Both `TextLayer` and `ImageLayer` extend `React.CSSProperties` with additional properties:
+### Layer Properties
 
 ```typescript
 interface TextLayer extends React.CSSProperties {
   value: string | undefined; // Text content
+  // CSS properties: left, top, width, height, fontSize, color, etc.
 }
 
 interface ImageLayer extends React.CSSProperties {
-  value: string | undefined; // Image data URL (base64)
+  value: string | undefined; // Base64 image data
+  // CSS properties: left, top, width, height, opacity, etc.
 }
 ```
 
-## 🎯 Usage Examples
+## Examples
 
 ### Basic Usage
 
 ```typescript
-import { psd2json } from '@ehzero/psd2json';
-
 const result = await psd2json(psdBuffer, {
   logging: true,
   includeHidden: false
 });
 
-// Access text layers
-result.texts.forEach((textLayer, index) => {
-  console.log(`Text ${index + 1}:`, textLayer.value);
-  console.log('Position:', { 
-    left: textLayer.left, 
-    top: textLayer.top 
-  });
-  console.log('Font:', textLayer.fontFamily);
+result.texts.forEach(textLayer => {
+  console.log('Text:', textLayer.value);
+  console.log('Position:', textLayer.left, textLayer.top);
+  console.log('Font:', textLayer.fontFamily, textLayer.fontSize);
 });
-
-// Access image layers
-result.images.forEach((imageLayer, index) => {
-  console.log(`Image ${index + 1} dimensions:`, {
-    width: imageLayer.width,
-    height: imageLayer.height
-  });
-});
-```
-
-### Pixel Values
-
-```typescript
-const result = await psd2json(psdBuffer);
-
-// All dimensions are in pixels
-console.log(result.texts[0]?.left); // 204
-console.log(result.texts[0]?.width); // 400
 ```
 
 ### React Integration
 
 ```tsx
-import React from 'react';
-import { psd2json, TextLayer, ImageLayer } from '@ehzero/psd2json';
-
-function PsdRenderer({ psdData }: { psdData: { texts: TextLayer[], images: ImageLayer[] } }) {
+function PsdRenderer({ psdData }) {
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
-      {/* Render text layers */}
-      {psdData.texts.map((textLayer, index) => (
-        <div key={`text-${index}`} style={textLayer}>
-          {textLayer.value}
+    <div style={{ position: 'relative' }}>
+      {psdData.texts.map((layer, i) => (
+        <div key={i} style={layer}>
+          {layer.value}
         </div>
       ))}
-      
-      {/* Render image layers */}
-      {psdData.images.map((imageLayer, index) => (
+
+      {psdData.images.map((layer, i) => (
         <div
-          key={`image-${index}`}
+          key={i}
           style={{
-            ...imageLayer,
-            backgroundImage: imageLayer.value ? `url(${imageLayer.value})` : undefined,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            ...layer,
+            backgroundImage: layer.value ? `url(${layer.value})` : undefined
           }}
         />
       ))}
     </div>
   );
 }
-
-// Usage
-const MyComponent = () => {
-  const [psdData, setPsdData] = useState(null);
-
-  useEffect(() => {
-    const loadPsd = async () => {
-      const buffer = /* load your PSD buffer */;
-      const data = await psd2json(buffer);
-      setPsdData(data);
-    };
-    loadPsd();
-  }, []);
-
-  return psdData ? <PsdRenderer psdData={psdData} /> : <div>Loading...</div>;
-};
 ```
 
-### Error Handling
+### Node.js Setup
+
+```typescript
+import { initializePsd2JsonForNode } from '@ehzero/psd2json';
+import * as canvas from 'canvas';
+
+// Required for image processing in Node.js
+initializePsd2JsonForNode(canvas);
+```
+
+## Output Format
+
+All dimensions are returned as pixel strings:
+
+```javascript
+{
+  position: 'absolute',
+  left: '100px',
+  top: '50px',
+  width: '400px',
+  height: '70px',
+  fontSize: '36px',
+  opacity: 0.9,           // number (0-1)
+  letterSpacing: '0.05em', // string with em
+  lineHeight: 1.2          // unitless number
+}
+```
+
+## Supported Features
+
+- Text layers: fonts, colors, positioning, effects
+- Image layers: positioning, opacity, blend modes
+- Layer effects: shadows, glows, strokes
+- TypeScript definitions
+- React CSSProperties compatibility
+
+## Error Handling
 
 ```typescript
 import { psd2json, PsdConversionError } from '@ehzero/psd2json';
 
 try {
   const result = await psd2json(buffer);
-  console.log('Conversion successful:', result);
 } catch (error) {
   if (error instanceof PsdConversionError) {
-    console.error('PSD conversion error:', error.message);
-    console.error('Error code:', error.code);
-  } else {
-    console.error('Unexpected error:', error);
+    console.error('PSD Error:', error.message);
   }
 }
 ```
 
-## 🎨 Supported Features
+## License
 
-### Text Layer Properties
-- ✅ Font family, size, weight
-- ✅ Text color and opacity
-- ✅ Text alignment and indentation  
-- ✅ Letter spacing and line height
-- ✅ Text transforms (uppercase, small caps)
-- ✅ Text decorations (underline, strikethrough)
-- ✅ Layer positioning and dimensions
-
-### Image Layer Properties
-- ✅ Layer positioning and dimensions
-- ✅ Opacity and blend modes
-- ✅ Image data as base64 data URLs
-- ✅ Canvas rendering support
-
-### Layer Effects
-- ✅ Drop shadows
-- ✅ Inner shadows
-- ✅ Outer glow
-- ✅ Stroke effects
-- ✅ Blend mode conversion
-
-### Units and Positioning
-- ✅ Pixel units (numbers)
-- ✅ Absolute positioning (`position: absolute`)
-- ✅ Proper coordinate system handling
-
-## 🔧 Advanced Configuration
-
-### Node.js Environment
-
-When using in Node.js, you may need to initialize canvas support for image processing:
-
-```typescript
-import { initializeCanvas } from 'ag-psd';
-import * as canvas from 'canvas';
-
-// Initialize canvas for Node.js
-initializeCanvas(canvas.createCanvas);
-```
-
-### Browser Environment
-
-For browser environments, consider using a bundler that properly handles ArrayBuffer:
-
-```typescript
-// Reading file in browser
-const handleFileSelect = async (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (file) {
-    const buffer = await file.arrayBuffer();
-    const result = await psd2json(buffer);
-    console.log('Converted:', result);
-  }
-};
-```
-
-## 🚨 Important Notes
-
-### Performance Considerations
-- Large PSD files may take time to process
-- Consider using Web Workers for heavy processing in browsers
-- Memory usage scales with PSD complexity and layer count
-
-### Known Limitations
-- Complex blend modes may not have CSS equivalents
-- Some advanced Photoshop effects cannot be replicated in CSS
-- Text styling may vary slightly due to font rendering differences
-- Vector layers are not currently supported
-
-### File Size
-- The library automatically excludes test files and development dependencies when published
-- Only essential runtime files are included in the npm package
-
-## 📝 Examples
-
-Check out the `/examples` directory (coming soon) for complete implementation examples:
-
-- Basic PSD to React conversion
-- Vue.js integration
-- Node.js server processing
-- Batch conversion scripts
-
-## 🛡️ Error Handling
-
-The library provides comprehensive error handling:
-
-```typescript
-// Error codes available
-enum ErrorCodes {
-  INVALID_BUFFER = 'INVALID_BUFFER',
-  INVALID_PSD_FORMAT = 'INVALID_PSD_FORMAT', 
-  PARSING_FAILED = 'PARSING_FAILED',
-  LAYER_CONVERSION_FAILED = 'LAYER_CONVERSION_FAILED',
-  INVALID_DIMENSIONS = 'INVALID_DIMENSIONS',
-  UNSUPPORTED_FEATURE = 'UNSUPPORTED_FEATURE',
-  MEMORY_ERROR = 'MEMORY_ERROR'
-}
-```
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
-
-## 📊 Changelog
-
-### v1.0.0
-- Initial release
-- Full TypeScript support
-- React CSSProperties integration
-- Comprehensive PSD parsing
-- Unit conversion (px/percentage)
-- Error handling system
-
-## 🙏 Acknowledgments
-
-- Built on top of the excellent [ag-psd](https://github.com/Agamnentzar/ag-psd) library
-- Inspired by the need for better PSD-to-web workflows
-- TypeScript and React community for excellent tooling
-
-## 📊 Changelog
-
-### v1.1.0
-- **BREAKING CHANGE**: Removed percentage units support
-- Simplified API - only pixel units are now supported
-- All position and size values are returned as strings with 'px' suffix (e.g., "400px")
-- Improved consistency and performance
-- Updated tests and documentation
-
-### v1.0.0
-- Initial release
-- Full TypeScript support
-- React CSSProperties integration
-- Comprehensive PSD parsing
-- Unit conversion (px/percentage)
-- Error handling system
-
-## 📞 Support
-
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/ehzero/psd2json/issues)
-- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/ehzero/psd2json/discussions)
-- 📖 **Documentation**: [GitHub Wiki](https://github.com/ehzero/psd2json/wiki)
-
----
-
-**Made with ❤️ for designers and developers who love pixel-perfect implementations.**
+MIT

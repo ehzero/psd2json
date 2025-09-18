@@ -1,6 +1,6 @@
 {
   "name": "@ehzero/psd2json",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A TypeScript library to convert PSD files to JSON format with React CSSProperties styling",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
