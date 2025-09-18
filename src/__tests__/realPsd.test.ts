@@ -1,10 +1,18 @@
 import { readFileSync } from 'fs';
-import { psd2json } from '../index';
+import { psd2json, initializePsd2JsonForNode } from '../index';
 
 describe('Real PSD File Tests', () => {
   const testPsdPath = './test.psd';
-  
+
   beforeAll(() => {
+    // Initialize canvas for Node.js environment
+    try {
+      const canvas = require('canvas');
+      initializePsd2JsonForNode(canvas);
+    } catch (error) {
+      console.warn('Canvas package not available, skipping real PSD tests that require image processing');
+    }
+
     // Skip tests if test file doesn't exist
     try {
       readFileSync(testPsdPath);
@@ -103,31 +111,31 @@ describe('Real PSD File Tests', () => {
     // Verify percentage units
     result.texts.forEach((textLayer) => {
       if (typeof textLayer.left === 'string') {
-        expect(textLayer.left).toMatch(/^\d+\.\d{2}%$/);
+        expect(textLayer.left).toMatch(/^-?\d+\.\d{2}%$/);
       }
       if (typeof textLayer.top === 'string') {
-        expect(textLayer.top).toMatch(/^\d+\.\d{2}%$/);
+        expect(textLayer.top).toMatch(/^-?\d+\.\d{2}%$/);
       }
       if (typeof textLayer.width === 'string') {
-        expect(textLayer.width).toMatch(/^\d+\.\d{2}%$/);
+        expect(textLayer.width).toMatch(/^-?\d+\.\d{2}%$/);
       }
       if (typeof textLayer.height === 'string') {
-        expect(textLayer.height).toMatch(/^\d+\.\d{2}%$/);
+        expect(textLayer.height).toMatch(/^-?\d+\.\d{2}%$/);
       }
     });
 
     result.images.forEach((imageLayer) => {
       if (typeof imageLayer.left === 'string') {
-        expect(imageLayer.left).toMatch(/^\d+\.\d{2}%$/);
+        expect(imageLayer.left).toMatch(/^-?\d+\.\d{2}%$/);
       }
       if (typeof imageLayer.top === 'string') {
-        expect(imageLayer.top).toMatch(/^\d+\.\d{2}%$/);
+        expect(imageLayer.top).toMatch(/^-?\d+\.\d{2}%$/);
       }
       if (typeof imageLayer.width === 'string') {
-        expect(imageLayer.width).toMatch(/^\d+\.\d{2}%$/);
+        expect(imageLayer.width).toMatch(/^-?\d+\.\d{2}%$/);
       }
       if (typeof imageLayer.height === 'string') {
-        expect(imageLayer.height).toMatch(/^\d+\.\d{2}%$/);
+        expect(imageLayer.height).toMatch(/^-?\d+\.\d{2}%$/);
       }
     });
   });

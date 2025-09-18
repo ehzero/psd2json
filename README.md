@@ -333,9 +333,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 📞 Support
 
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/yty/psd2json/issues)
-- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/yty/psd2json/discussions)
-- 📖 **Documentation**: [GitHub Wiki](https://github.com/yty/psd2json/wiki)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/ehzero/psd2json/issues)
+- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/ehzero/psd2json/discussions)
+- 📖 **Documentation**: [GitHub Wiki](https://github.com/ehzero/psd2json/wiki)
 
 ---
 

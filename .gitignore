@@ -114,3 +114,6 @@ Thumbs.db
 
 # Test files (if not wanted in repo)
 test-psd-files/
+
+# claude
+.claude/

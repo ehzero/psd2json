@@ -7,7 +7,14 @@
       "Bash(node:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run clean:*)",
+      "Bash(npm pack:*)",
+      "Bash(npm run:*)",
+      "Bash(npm install:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)"
     ],
     "deny": [],
     "ask": []
