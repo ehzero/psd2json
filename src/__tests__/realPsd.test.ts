@@ -37,8 +37,7 @@ describe('Real PSD File Tests', () => {
 
     const result = await psd2json(buffer, {
       logging: true,
-      includeHidden: false,
-      units: 'px'
+      includeHidden: false
     });
 
     console.log('Conversion result:', {
@@ -88,7 +87,7 @@ describe('Real PSD File Tests', () => {
     });
   });
 
-  it('should convert real PSD file with percentage units', async () => {
+  it('should convert real PSD file with pixel units only', async () => {
     let buffer: ArrayBuffer;
     
     try {
@@ -104,39 +103,30 @@ describe('Real PSD File Tests', () => {
 
     const result = await psd2json(buffer, {
       logging: false,
-      includeHidden: false,
-      units: 'percent'
+      includeHidden: false
     });
 
-    // Verify percentage units
+    // Verify pixel units (strings with 'px' suffix)
     result.texts.forEach((textLayer) => {
-      if (typeof textLayer.left === 'string') {
-        expect(textLayer.left).toMatch(/^-?\d+\.\d{2}%$/);
-      }
-      if (typeof textLayer.top === 'string') {
-        expect(textLayer.top).toMatch(/^-?\d+\.\d{2}%$/);
-      }
-      if (typeof textLayer.width === 'string') {
-        expect(textLayer.width).toMatch(/^-?\d+\.\d{2}%$/);
-      }
-      if (typeof textLayer.height === 'string') {
-        expect(textLayer.height).toMatch(/^-?\d+\.\d{2}%$/);
-      }
+      expect(typeof textLayer.left).toBe('string');
+      expect(typeof textLayer.top).toBe('string');
+      expect(typeof textLayer.width).toBe('string');
+      expect(typeof textLayer.height).toBe('string');
+      expect(textLayer.left?.toString()).toMatch(/px$/);
+      expect(textLayer.top?.toString()).toMatch(/px$/);
+      expect(textLayer.width?.toString()).toMatch(/px$/);
+      expect(textLayer.height?.toString()).toMatch(/px$/);
     });
 
     result.images.forEach((imageLayer) => {
-      if (typeof imageLayer.left === 'string') {
-        expect(imageLayer.left).toMatch(/^-?\d+\.\d{2}%$/);
-      }
-      if (typeof imageLayer.top === 'string') {
-        expect(imageLayer.top).toMatch(/^-?\d+\.\d{2}%$/);
-      }
-      if (typeof imageLayer.width === 'string') {
-        expect(imageLayer.width).toMatch(/^-?\d+\.\d{2}%$/);
-      }
-      if (typeof imageLayer.height === 'string') {
-        expect(imageLayer.height).toMatch(/^-?\d+\.\d{2}%$/);
-      }
+      expect(typeof imageLayer.left).toBe('string');
+      expect(typeof imageLayer.top).toBe('string');
+      expect(typeof imageLayer.width).toBe('string');
+      expect(typeof imageLayer.height).toBe('string');
+      expect(imageLayer.left?.toString()).toMatch(/px$/);
+      expect(imageLayer.top?.toString()).toMatch(/px$/);
+      expect(imageLayer.width?.toString()).toMatch(/px$/);
+      expect(imageLayer.height?.toString()).toMatch(/px$/);
     });
   });
 

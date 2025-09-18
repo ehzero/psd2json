@@ -11,7 +11,7 @@ A powerful TypeScript library that converts Adobe Photoshop PSD files to structu
 - 🎨 **Convert PSD to JSON**: Transform Photoshop documents into structured data
 - ⚛️ **React Ready**: Output styles as React.CSSProperties for seamless integration
 - 🎯 **Layer Separation**: Automatically separates text and image layers
-- 📏 **Multiple Units**: Support for both pixels (`px`) and percentage (`%`) units
+- 📏 **Pixel Units**: Consistent pixel-based positioning and sizing
 - 🔍 **Comprehensive Parsing**: Extracts fonts, colors, positioning, effects, and more
 - 🛡️ **TypeScript First**: Full TypeScript support with strict type checking
 - 🚀 **Optimized Performance**: Built on the reliable ag-psd library
@@ -20,13 +20,13 @@ A powerful TypeScript library that converts Adobe Photoshop PSD files to structu
 ## 📦 Installation
 
 ```bash
-npm install psd2json
+npm install @ehzero/psd2json
 ```
 
 ## 🚀 Quick Start
 
 ```typescript
-import { psd2json } from 'psd2json';
+import { psd2json } from '@ehzero/psd2json';
 import { readFileSync } from 'fs';
 
 // Load your PSD file
@@ -62,7 +62,6 @@ Converts a PSD file buffer to structured JSON format.
 interface ConversionOptions {
   logging?: boolean;        // Enable conversion progress logs (default: false)
   includeHidden?: boolean;  // Include hidden layers (default: false)
-  units?: 'px' | 'percent'; // Output units (default: 'px')
 }
 ```
 
@@ -94,12 +93,11 @@ interface ImageLayer extends React.CSSProperties {
 ### Basic Usage
 
 ```typescript
-import { psd2json } from 'psd2json';
+import { psd2json } from '@ehzero/psd2json';
 
 const result = await psd2json(psdBuffer, {
   logging: true,
-  includeHidden: false,
-  units: 'px'
+  includeHidden: false
 });
 
 // Access text layers
@@ -121,23 +119,21 @@ result.images.forEach((imageLayer, index) => {
 });
 ```
 
-### Percentage Units
+### Pixel Values
 
 ```typescript
-const result = await psd2json(psdBuffer, {
-  units: 'percent'
-});
+const result = await psd2json(psdBuffer);
 
-// All dimensions will be in percentage relative to PSD dimensions
-console.log(result.texts[0]?.left); // "25.50%"
-console.log(result.texts[0]?.width); // "50.00%"
+// All dimensions are in pixels
+console.log(result.texts[0]?.left); // 204
+console.log(result.texts[0]?.width); // 400
 ```
 
 ### React Integration
 
 ```tsx
 import React from 'react';
-import { psd2json, TextLayer, ImageLayer } from 'psd2json';
+import { psd2json, TextLayer, ImageLayer } from '@ehzero/psd2json';
 
 function PsdRenderer({ psdData }: { psdData: { texts: TextLayer[], images: ImageLayer[] } }) {
   return (
@@ -172,7 +168,7 @@ const MyComponent = () => {
   useEffect(() => {
     const loadPsd = async () => {
       const buffer = /* load your PSD buffer */;
-      const data = await psd2json(buffer, { units: 'percent' });
+      const data = await psd2json(buffer);
       setPsdData(data);
     };
     loadPsd();
@@ -185,7 +181,7 @@ const MyComponent = () => {
 ### Error Handling
 
 ```typescript
-import { psd2json, PsdConversionError } from 'psd2json';
+import { psd2json, PsdConversionError } from '@ehzero/psd2json';
 
 try {
   const result = await psd2json(buffer);
@@ -225,8 +221,7 @@ try {
 - ✅ Blend mode conversion
 
 ### Units and Positioning
-- ✅ Pixel units (`px`)
-- ✅ Percentage units (`%`) relative to PSD dimensions
+- ✅ Pixel units (numbers)
 - ✅ Absolute positioning (`position: absolute`)
 - ✅ Proper coordinate system handling
 
@@ -330,6 +325,23 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - Built on top of the excellent [ag-psd](https://github.com/Agamnentzar/ag-psd) library
 - Inspired by the need for better PSD-to-web workflows
 - TypeScript and React community for excellent tooling
+
+## 📊 Changelog
+
+### v1.1.0
+- **BREAKING CHANGE**: Removed percentage units support
+- Simplified API - only pixel units are now supported
+- All position and size values are returned as strings with 'px' suffix (e.g., "400px")
+- Improved consistency and performance
+- Updated tests and documentation
+
+### v1.0.0
+- Initial release
+- Full TypeScript support
+- React CSSProperties integration
+- Comprehensive PSD parsing
+- Unit conversion (px/percentage)
+- Error handling system
 
 ## 📞 Support
 

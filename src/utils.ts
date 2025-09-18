@@ -8,24 +8,17 @@ export function log(context: ConversionContext, message: string, ...args: unknow
 }
 
 export function convertPxToPercent(
-  value: number,
-  reference: number,
-  context: ConversionContext
-): string | number {
-  if (context.options.units === 'percent') {
-    const percentage = (value / reference) * 100;
-    return `${percentage.toFixed(2)}%`;
-  }
+  value: number
+): number {
+  // Always return px values only
   return value;
 }
 
 export function convertDimensionValue(
-  value: number,
-  isWidth: boolean,
-  context: ConversionContext
-): string | number {
-  const reference = isWidth ? context.psdDimensions.width : context.psdDimensions.height;
-  return convertPxToPercent(value, reference, context);
+  value: number
+): string {
+  // Always return px values as strings with 'px' unit
+  return `${value}px`;
 }
 
 export function normalizeLayerBounds(bounds: LayerBounds): LayerBounds {

@@ -137,7 +137,7 @@ describe('Converter', () => {
       expect(result.images[0]?.opacity).toBe(0.8);
     });
 
-    it('should handle percentage units', async () => {
+    it('should handle pixel units only', async () => {
       const mockPsd = {
         width: 800,
         height: 600,
@@ -153,15 +153,15 @@ describe('Converter', () => {
           }
         ]
       };
-      
+
       mockReadPsd.mockReturnValue(mockPsd as any);
-      
-      const result = await psd2json(createValidPsdBuffer(), { units: 'percent' });
-      
-      expect(result.texts[0]?.left).toBe('50.00%');
-      expect(result.texts[0]?.top).toBe('50.00%');
-      expect(result.texts[0]?.width).toBe('25.00%');
-      expect(result.texts[0]?.height).toBe('25.00%');
+
+      const result = await psd2json(createValidPsdBuffer());
+
+      expect(result.texts[0]?.left).toBe('400px');
+      expect(result.texts[0]?.top).toBe('300px');
+      expect(result.texts[0]?.width).toBe('200px');
+      expect(result.texts[0]?.height).toBe('150px');
     });
 
     it('should exclude hidden layers when includeHidden is false', async () => {
@@ -214,10 +214,7 @@ describe('Converter', () => {
       expect(result.texts[0]?.value).toBe('Hidden');
     });
 
-    it('should throw error for invalid options', async () => {
-      await expect(psd2json(createValidPsdBuffer(), { units: 'invalid' as any }))
-        .rejects.toThrow(PsdConversionError);
-    });
+    // Test removed - units option no longer exists
 
     it('should throw error when readPsd fails', async () => {
       mockReadPsd.mockReturnValue(null as any);

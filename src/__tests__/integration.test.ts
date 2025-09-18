@@ -101,8 +101,7 @@ describe('Integration Tests', () => {
     
     const result = await psd2json(buffer, {
       logging: true,
-      includeHidden: false,
-      units: 'px'
+      includeHidden: false
     });
 
     // Verify structure
@@ -115,18 +114,18 @@ describe('Integration Tests', () => {
     const titleText = result.texts.find(t => t.value === 'Welcome to Our Website');
     expect(titleText).toBeDefined();
     expect(titleText?.position).toBe('absolute');
-    expect(titleText?.left).toBe(100);
-    expect(titleText?.top).toBe(50);
-    expect(titleText?.width).toBe(400);
-    expect(titleText?.height).toBe(70);
-    expect(titleText?.fontSize).toBe(36);
+    expect(titleText?.left).toBe('100px');
+    expect(titleText?.top).toBe('50px');
+    expect(titleText?.width).toBe('400px');
+    expect(titleText?.height).toBe('70px');
+    expect(titleText?.fontSize).toBe('36px');
     // Mock data has align: 1 which should map to center
     // but it doesn't have paragraphStyle structure expected by converter
     // expect(titleText?.textAlign).toBe('center');
 
     const buttonText = result.texts.find(t => t.value === 'Click Here');
     expect(buttonText).toBeDefined();
-    expect(buttonText?.fontSize).toBe(18);
+    expect(buttonText?.fontSize).toBe('18px');
 
     // Verify image layers  
     expect(result.images).toHaveLength(1);
@@ -134,32 +133,31 @@ describe('Integration Tests', () => {
     const heroImage = result.images[0];
     expect(heroImage).toBeDefined();
     expect(heroImage?.position).toBe('absolute');
-    expect(heroImage?.left).toBe(0);
-    expect(heroImage?.top).toBe(150);
-    expect(heroImage?.width).toBe(1920);
-    expect(heroImage?.height).toBe(650);
+    expect(heroImage?.left).toBe('0px');
+    expect(heroImage?.top).toBe('150px');
+    expect(heroImage?.width).toBe('1920px');
+    expect(heroImage?.height).toBe('650px');
     expect(heroImage?.opacity).toBe(0.9);
     expect(heroImage?.mixBlendMode).toBe('multiply');
     expect(heroImage?.value).toContain('data:image/jpeg;base64');
   });
 
-  it('should convert with percentage units', async () => {
+  it('should convert with pixel units only', async () => {
     const buffer = createMockPsdBuffer();
-    
+
     const result = await psd2json(buffer, {
-      units: 'percent',
       includeHidden: false
     });
 
     const titleText = result.texts.find(t => t.value === 'Welcome to Our Website');
-    expect(titleText?.left).toBe('5.21%'); // 100/1920 * 100
-    expect(titleText?.top).toBe('4.63%'); // 50/1080 * 100
-    expect(titleText?.width).toBe('20.83%'); // 400/1920 * 100
-    expect(titleText?.height).toBe('6.48%'); // 70/1080 * 100
+    expect(titleText?.left).toBe('100px');
+    expect(titleText?.top).toBe('50px');
+    expect(titleText?.width).toBe('400px');
+    expect(titleText?.height).toBe('70px');
 
     const heroImage = result.images[0];
-    expect(heroImage?.left).toBe('0.00%');
-    expect(heroImage?.width).toBe('100.00%');
+    expect(heroImage?.left).toBe('0px');
+    expect(heroImage?.width).toBe('1920px');
   });
 
   it('should include hidden layers when requested', async () => {
@@ -173,8 +171,8 @@ describe('Integration Tests', () => {
     
     const hiddenText = result.texts.find(t => t.value === 'This is hidden');
     expect(hiddenText).toBeDefined();
-    expect(hiddenText?.left).toBe(200);
-    expect(hiddenText?.top).toBe(200);
+    expect(hiddenText?.left).toBe('200px');
+    expect(hiddenText?.top).toBe('200px');
   });
 
   it('should handle conversion errors gracefully', async () => {

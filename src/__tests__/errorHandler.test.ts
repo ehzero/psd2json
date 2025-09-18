@@ -57,8 +57,7 @@ describe('ErrorHandler', () => {
       expect(() => {
         validateConversionOptions({
           logging: true,
-          includeHidden: false,
-          units: 'percent'
+          includeHidden: false
         });
       }).not.toThrow();
     });
@@ -82,11 +81,7 @@ describe('ErrorHandler', () => {
       }).toThrow(PsdConversionError);
     });
 
-    it('should reject invalid units option', () => {
-      expect(() => {
-        validateConversionOptions({ units: 'invalid' });
-      }).toThrow(PsdConversionError);
-    });
+    // Test removed - units option no longer exists
   });
 
   describe('safeLayerConversion', () => {

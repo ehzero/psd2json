@@ -80,12 +80,7 @@ export function validateConversionOptions(options: any): void {
     );
   }
 
-  if (options.units !== undefined && !['px', 'percent'].includes(options.units)) {
-    throw new PsdConversionError(
-      'units option must be either "px" or "percent"',
-      ErrorCodes.INVALID_BUFFER
-    );
-  }
+  // Units option removed - only px values are supported
 }
 
 export function safeLayerConversion<T>(

@@ -27,8 +27,7 @@ import {
 
 const DEFAULT_OPTIONS: Required<ConversionOptions> = {
   logging: false,
-  includeHidden: false,
-  units: 'px'
+  includeHidden: false
 };
 
 export async function psd2json(

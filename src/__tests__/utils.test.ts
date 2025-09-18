@@ -7,42 +7,21 @@ import {
   isImageLayer,
   shouldIncludeLayer
 } from '../utils';
-import { ConversionContext } from '../types';
 
 describe('Utils', () => {
-  const mockContext: ConversionContext = {
-    psdDimensions: { width: 800, height: 600 },
-    options: { logging: false, includeHidden: false, units: 'px' },
-    logging: false
-  };
-
-  const mockContextPercent: ConversionContext = {
-    psdDimensions: { width: 800, height: 600 },
-    options: { logging: false, includeHidden: false, units: 'percent' },
-    logging: false
-  };
+  // Mock context removed - no longer needed for simplified functions
 
   describe('convertPxToPercent', () => {
-    it('should convert pixels to percentage when units is percent', () => {
-      const result = convertPxToPercent(400, 800, mockContextPercent);
-      expect(result).toBe('50.00%');
-    });
-
-    it('should return pixels when units is px', () => {
-      const result = convertPxToPercent(400, 800, mockContext);
+    it('should return pixel values only', () => {
+      const result = convertPxToPercent(400);
       expect(result).toBe(400);
     });
   });
 
   describe('convertDimensionValue', () => {
-    it('should convert width dimension to percentage', () => {
-      const result = convertDimensionValue(200, true, mockContextPercent);
-      expect(result).toBe('25.00%');
-    });
-
-    it('should convert height dimension to percentage', () => {
-      const result = convertDimensionValue(150, false, mockContextPercent);
-      expect(result).toBe('25.00%');
+    it('should return pixel values with px unit', () => {
+      const result = convertDimensionValue(200);
+      expect(result).toBe('200px');
     });
   });
 

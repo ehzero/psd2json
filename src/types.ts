@@ -3,7 +3,6 @@ import { CSSProperties } from 'react';
 export interface ConversionOptions {
   logging?: boolean;
   includeHidden?: boolean;
-  units?: 'px' | 'percent';
 }
 
 export interface TextLayer extends CSSProperties {

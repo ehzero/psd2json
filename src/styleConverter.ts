@@ -73,7 +73,7 @@ export function convertImageLayer(
 
 function convertTextStyles(
   layer: Layer,
-  context: ConversionContext
+  _context: ConversionContext
 ): CSSProperties {
   const styles: CSSProperties = {};
   const textData = layer.text;
@@ -93,9 +93,7 @@ function convertTextStyles(
         styles.fontSize = `${realFontSize}px`;
       } else {
         const fontSize = convertDimensionValue(
-          textStyle.fontSize,
-          false,
-          context
+          textStyle.fontSize
         );
         styles.fontSize = fontSize;
       }
@@ -246,7 +244,7 @@ function convertTextAlignment(alignment: any): CSSProperties["textAlign"] {
  */
 function getBaseLayerStyles(
   layer: Layer,
-  context: ConversionContext,
+  _context: ConversionContext,
   customBounds?: { left: number; top: number; width: number; height: number }
 ): CSSProperties {
   let left: number, top: number, width: number, height: number;
@@ -263,10 +261,10 @@ function getBaseLayerStyles(
 
   const styles: CSSProperties = {
     position: "absolute",
-    left: convertDimensionValue(left, true, context),
-    top: convertDimensionValue(top, false, context),
-    width: convertDimensionValue(width, true, context),
-    height: convertDimensionValue(height, false, context),
+    left: convertDimensionValue(left),
+    top: convertDimensionValue(top),
+    width: convertDimensionValue(width),
+    height: convertDimensionValue(height),
   };
 
   if (layer.opacity !== undefined && layer.opacity < 1) {
